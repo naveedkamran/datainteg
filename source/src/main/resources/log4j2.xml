@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+    <Appenders>
+
+        <RollingRandomAccessFile name="rollingRandomAccessFile"
+                                 fileName="/home/naveed/work/projects/business300/bcrm/logs/app.log"
+                                 filePattern="/logs/bcrm/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-.PART_%i.log.gz">
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10240 MB"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <!--        <JDBC name="databaseAppender" tableName="dbo.application_log">
+            <DataSource jndiName="java:/LincolnAPI"/>
+            <Column name="eventDate" isEventTimestamp="true"/>
+            <Column name="level" pattern="%level"/>
+            <Column name="logger" pattern="%logger"/>
+            <Column name="message" pattern="%message"/>
+            <Column name="exception" pattern="%ex{full}"/>
+            <Column name="application" literal="'LincolnAPI'"/>
+        </JDBC>-->
+    </Appenders>
+
+    <Loggers>
+        <Root level="DEBUG">
+            <AppenderRef ref="rollingRandomAccessFile" level="DEBUG"/>
+            <!--<AppenderRef ref="databaseAppender" level="WARN"/>-->
+        </Root>
+    </Loggers>
+</Configuration>
