@@ -1,9 +1,11 @@
 package com.naveedkamran.dataapp;
 
+import com.datenc.commons.persistance.DbConnectionUtil;
+import com.datenc.commons.persistance.DbQueryUtil;
 import com.naveedkamran.dataapp.reader.LogicalRelation;
 import com.naveedkamran.dataapp.reader.ReaderCsv;
-import com.poginato.commons.persistance.DBUtil;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,10 +25,16 @@ public class AppMain {
         try {
             LogicalRelation logicalRelation = new ReaderCsv();
 
-            List<List<String>> csvData = logicalRelation.getData("", cellSplitter);
+            List<List<String>> csvData = logicalRelation.getData("C:\\home\\naveed\\work\\projects\\tubit\\datainteg\\trunk\\resc\\test-data\\inputDB.csv", null, ",");
 
-            Connection connection = DBUtil.getInstance().getConnection();
-            List<List<String>> result = DBUtil.getInstance().getData(connection, "");
+            List<String> columnNames = new ArrayList();
+            columnNames.add("rcity");
+            columnNames.add("rstate");
+
+            DbQueryUtil.getInstance().insert("src_table", columnNames, csvData.subList(1, csvData.size() - 1));
+
+            Connection connection = DbConnectionUtil.getInstance().getConnection();
+            List<List<String>> result = DbQueryUtil.getInstance().getData(connection, "");
         } catch (Exception ex) {
             Logger.getLogger(AppMain.class.getName()).log(Level.SEVERE, null, ex);
         }

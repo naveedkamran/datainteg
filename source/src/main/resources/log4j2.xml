@@ -3,7 +3,7 @@
     <Appenders>
 
         <RollingRandomAccessFile name="rollingRandomAccessFile"
-                                 fileName="/home/naveed/work/projects/business300/bcrm/logs/app.log"
+                                 fileName="/home/naveed/work/projects/tubit/datainteg/logs/app.log"
                                  filePattern="/logs/bcrm/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-.PART_%i.log.gz">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <Policies>

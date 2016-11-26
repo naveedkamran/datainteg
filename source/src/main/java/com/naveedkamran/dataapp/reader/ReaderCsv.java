@@ -14,6 +14,7 @@ import java.util.logging.Logger;
  */
 public class ReaderCsv implements LogicalRelation {
 
+    @Override
     public List<List<String>> getData(String dataSourceUri, String rowSplitter, String cellSplitter) {
         List<List<String>> dataRelation = new ArrayList();
 
@@ -28,6 +29,8 @@ public class ReaderCsv implements LogicalRelation {
                     row.add(dataCell);
                 }
                 dataRelation.add(row);
+
+                line = br.readLine();
             }
             br.close();
         } catch (Exception ex) {
