@@ -1,14 +1,13 @@
 package com.naveedkamran.dataapp;
 
+import com.datenc.commons.exception.DALException;
 import com.datenc.commons.persistance.DbConnectionUtil;
 import com.datenc.commons.persistance.DbQueryUtil;
-import com.naveedkamran.dataapp.reader.LogicalRelation;
-import com.naveedkamran.dataapp.reader.ReaderCsv;
 import java.sql.Connection;
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 
 /**
  *
@@ -16,29 +15,37 @@ import java.util.logging.Logger;
  */
 public class AppMain {
 
+    private void loadData()
+            throws DALException, SQLException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+        Connection connection = DbConnectionUtil.getInstance().getConnection();
+
+        //Read the source as per the format required in target
+        List<List<String>> result = DbQueryUtil.getInstance().getData(connection, "select recid, upper(rcity) as rcity, upper(rstate) as rstate from src_table");
+
+        //Clean the target (is useful if you want to re run the process.
+        DbQueryUtil.getInstance().update("delete from tar_table");
+
+        Map<String, String> mappings = new HashMap();
+        mappings.put("rcity_temp", "rcity");
+        mappings.put("rstate_temp", "rstate");
+        mappings.put("recid", "recid");
+
+        //DbQueryUtil.getInstance().insert("src_table", columnNames,  csvData.subList(1, csvData.size() - 1));
+        DbQueryUtil.getInstance().insert("tar_table", mappings, result);
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         System.out.println("Initializing app");
-
         try {
-            LogicalRelation logicalRelation = new ReaderCsv();
+            //new AppMain().loadData();
 
-            List<List<String>> csvData = logicalRelation.getData("C:\\home\\naveed\\work\\projects\\tubit\\datainteg\\trunk\\resc\\test-data\\inputDB.csv", null, ",");
-
-            List<String> columnNames = new ArrayList();
-            columnNames.add("rcity");
-            columnNames.add("rstate");
-
-            DbQueryUtil.getInstance().insert("src_table", columnNames, csvData.subList(1, csvData.size() - 1));
-
-            Connection connection = DbConnectionUtil.getInstance().getConnection();
-            List<List<String>> result = DbQueryUtil.getInstance().getData(connection, "");
+            //Clean the target (is useful if you want to re run the process.
+            DbQueryUtil.getInstance().update("update tar_table set rstate = rstate_temp where length( rstate_temp ) = 2");
         } catch (Exception ex) {
-            Logger.getLogger(AppMain.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
-
     }
-
 }
