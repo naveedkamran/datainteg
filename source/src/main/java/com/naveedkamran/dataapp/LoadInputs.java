@@ -30,8 +30,9 @@ public class LoadInputs {
 
         Map<String, String> mappings = new HashMap();
         mappings.put("rcity", "City(String)");
-        mappings.put("rstate", "State(String)");
         mappings.put("recid", "RecID(String)");
+        mappings.put("rstate", "State(String)");
+        mappings.put("rzip", "ZIP(String)");
 
         //DbQueryUtil.getInstance().insert("src_table", columnNames,  csvData.subList(1, csvData.size() - 1));
         DbQueryUtil.getInstance().insert("src_table", mappings, csvData);

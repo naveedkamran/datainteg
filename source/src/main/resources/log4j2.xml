@@ -3,8 +3,8 @@
     <Appenders>
 
         <RollingRandomAccessFile name="rollingRandomAccessFile"
-                                 fileName="/home/naveed/work/projects/tubit/datainteg/logs/app.log"
-                                 filePattern="/logs/bcrm/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-.PART_%i.log.gz">
+                                 fileName="c:/home/naveed/work/projects/tubit/datainteg/logs/app.log"
+                                 filePattern="c:/logs/bcrm/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-.PART_%i.log.gz">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
