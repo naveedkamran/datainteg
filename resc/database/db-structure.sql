@@ -21,14 +21,13 @@ create table `tar_table` (
   primary key (`id`)
 ) engine=myisam auto_increment=188613 default charset=latin1;
 
-DROP TABLE IF EXISTS `zipstatecity`;
+drop table if exists `zip_state_city`;
 
-CREATE TABLE `zipstatecity` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `rstate` varchar(100) DEFAULT NULL,
-  `rcity` varbinary(100) DEFAULT NULL,
-  `rzip` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+create table `zip_state_city` (
+  `id` bigint(20) not null auto_increment,
+  `rstate` varchar(100) default null,
+  `rcity` varbinary(100) default null,
+  `rzip` int(11) default null,
+  primary key (`id`)
+) engine=myisam default charset=latin1;
 
-update tar_table set rstate = ( select name_short from tstate where name = rstate_temp ) where rstate is null;
