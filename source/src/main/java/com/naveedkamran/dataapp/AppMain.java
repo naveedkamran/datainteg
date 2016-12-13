@@ -24,12 +24,13 @@ public class AppMain {
         Connection connection = DbConnectionUtil.getInstance().getConnection();
 
         //Read the source as per the format required in target
-        List<List<String>> result = DbQueryUtil.getInstance().getData(connection, "select recid, upper(rcity) as rcity, upper(rstate) as rstate, rzip from src_table");
+        List<List<String>> result = DbQueryUtil.getInstance().getData(connection, "select recid, upper(raddress) as raddress, upper(rcity) as rcity, upper(rstate) as rstate, rzip from src_table");
 
         //Clean the target (is useful if you want to re run the process.
         DbQueryUtil.getInstance().update("delete from tar_table");
 
         Map<String, String> mappings = new HashMap();
+        mappings.put("raddress", "raddress");
         mappings.put("rcity_temp", "rcity");
         mappings.put("recid", "recid");
         mappings.put("rstate_temp", "rstate");
@@ -44,6 +45,8 @@ public class AppMain {
         //Clean the target (is useful if you want to re run the process.
         DbQueryUtil.getInstance().update("update tar_table set rstate = rstate_temp where length( rstate_temp ) = 2;");
         DbQueryUtil.getInstance().update("update tar_table set rstate = (select name_short from tstate where upper(trim(name))=rstate ) where rstate is null;");
+        DbQueryUtil.getInstance().update("update tar_table set rcity = rcity_temp where rcity_temp != '\"' and length(rcity_temp) > 2;");
+        DbQueryUtil.getInstance().update("update tar_table set raddress = replace(raddress,'\"','');;");
     }
 
     private void performZipBasicNormalization()
@@ -104,7 +107,7 @@ public class AppMain {
         String searchStr = "<p class=\"std-address\">";
         Map<String, String> mappings = null;
 
-        for (int zip = 10000; zip < 999999; zip++) {
+        for (int zip = 574617; zip < 999999; zip++) {
             try {
                 //int zip = 92113;
                 String content = HttpUtil.getInstance().getContentOfUrl("https://tools.usps.com/go/ZipLookupResultsAction!input.action?resultMode=2&companyName=&address1=&address2=&city=&state=Select&urbanCode=&postalCode=" + zip + "&zip=");
@@ -140,14 +143,14 @@ public class AppMain {
     public static void main(String[] args) {
         System.out.println("Initializing app");
         try {
-            LoadInputs.getInstance().loadInputs();
+            //LoadInputs.getInstance().loadInputs();
 
             AppMain app = new AppMain();
             app.performLoadTargetTable();
             app.performStateNormalization();
-
             app.performZipBasicNormalization();
-            app.buildStateCityZipKb();
+
+            //app.buildStateCityZipKb();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

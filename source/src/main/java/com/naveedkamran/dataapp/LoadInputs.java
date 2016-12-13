@@ -33,6 +33,7 @@ public class LoadInputs {
         mappings.put("recid", "RecID(String)");
         mappings.put("rstate", "State(String)");
         mappings.put("rzip", "ZIP(String)");
+        mappings.put("raddress", "Address(String)");
 
         //DbQueryUtil.getInstance().insert("src_table", columnNames,  csvData.subList(1, csvData.size() - 1));
         DbQueryUtil.getInstance().insert("src_table", mappings, csvData);
