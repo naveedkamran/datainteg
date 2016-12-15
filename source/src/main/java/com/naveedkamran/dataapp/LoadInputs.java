@@ -26,7 +26,8 @@ public class LoadInputs {
     public void loadInputs() throws DALException {
         LogicalRelation logicalRelation = new ReaderCsv();
 
-        List<List<String>> csvData = logicalRelation.getData("C:\\home\\naveed\\work\\projects\\tub\\datainteg\\trunk\\resc\\test-data\\inputDB.csv", null, ",");
+        List<List<String>> csvData = logicalRelation.getData(
+                "C:\\home\\naveed\\work\\projects\\tub\\datainteg\\trunk\\resc\\test-data\\inputDB.csv", null, ",");
 
         Map<String, String> mappings = new HashMap();
         mappings.put("rcity", "City(String)");

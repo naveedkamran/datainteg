@@ -24,7 +24,8 @@ public class AppMain {
         Connection connection = DbConnectionUtil.getInstance().getConnection();
 
         //Read the source as per the format required in target
-        List<List<String>> result = DbQueryUtil.getInstance().getData(connection, "select recid, upper(raddress) as raddress, upper(rcity) as rcity, upper(rstate) as rstate, rzip from src_table");
+        List<List<String>> result = DbQueryUtil.getInstance().getData(connection,
+                "select recid, upper(raddress) as raddress, upper(rcity) as rcity, upper(rstate) as rstate, rzip from src_table");
 
         //Clean the target (is useful if you want to re run the process.
         DbQueryUtil.getInstance().update("delete from tar_table");
@@ -38,6 +39,7 @@ public class AppMain {
 
         //DbQueryUtil.getInstance().insert("src_table", columnNames,  csvData.subList(1, csvData.size() - 1));
         DbQueryUtil.getInstance().insert("tar_table", mappings, result);
+        DbConnectionUtil.getInstance().closeConnection(connection);
     }
 
     private void performStateNormalization()
@@ -54,7 +56,8 @@ public class AppMain {
         Connection connection = DbConnectionUtil.getInstance().getConnection();
 
         //Read the source as per the format required in target
-        List<List<String>> relationData = DbQueryUtil.getInstance().getData(connection, "select id, rzip_temp from tar_table where rzip is null order by id;");
+        List<List<String>> relationData = DbQueryUtil.getInstance().getData(connection,
+                "select id, rzip_temp from tar_table where rzip is null order by id;");
 
         List<String> headerRow = (List<String>) relationData.get(0);
         int colsCount = headerRow.size();
@@ -99,7 +102,7 @@ public class AppMain {
 
             counter++;
         }
-
+        DbConnectionUtil.getInstance().closeConnection(connection);
     }
 
     public void buildStateCityZipKb() throws DALException {
@@ -107,10 +110,11 @@ public class AppMain {
         String searchStr = "<p class=\"std-address\">";
         Map<String, String> mappings = null;
 
-        for (int zip = 574617; zip < 999999; zip++) {
+        for (int zip = 10000; zip < 999999; zip++) {
             try {
                 //int zip = 92113;
-                String content = HttpUtil.getInstance().getContentOfUrl("https://tools.usps.com/go/ZipLookupResultsAction!input.action?resultMode=2&companyName=&address1=&address2=&city=&state=Select&urbanCode=&postalCode=" + zip + "&zip=");
+                String content = HttpUtil.getInstance().getContentOfUrl(
+                        "https://tools.usps.com/go/ZipLookupResultsAction!input.action?resultMode=2&companyName=&address1=&address2=&city=&state=Select&urbanCode=&postalCode=" + zip + "&zip=");
 
                 int searchIndex = content.indexOf(searchStringIdea);
                 String contentOut = content.substring(searchIndex + 50, searchIndex + 200);
